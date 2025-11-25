@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Calendar Prototype - Global Cities</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        .prototype-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .prototype-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .prototype-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.1);
+        }
+        .prototype-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #2563eb;
+            transform: translateX(-4px);
+            transition: transform 0.2s;
+        }
+        .prototype-card:hover::before {
+            transform: translateX(0);
+        }
+        .card-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .card-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        .flow-diagram {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .flow-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #1e40af;
+            min-width: 120px;
+        }
+        .flow-arrow {
+            color: #60a5fa;
+            font-size: 1.5rem;
+        }
+        .note {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+        .note strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        @media (max-width: 640px) {
+            .prototype-grid {
+                grid-template-columns: 1fr;
+            }
+            .flow-steps {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Workshop Calendar Integration</h1>
+        <p class="subtitle">Interactive Prototype - Global Cities</p>
+
+        <div class="flow-diagram">
+            <div class="flow-title">User Journey Flow</div>
+            <div class="flow-steps">
+                <div class="flow-step">Browse Calendar</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">View Details</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Register</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Confirm</div>
+            </div>
+        </div>
+
+        <div class="prototype-grid">
+            <a href="calendar-view.html" class="prototype-card">
+                <div class="card-number">1</div>
+                <div class="card-title">Calendar View</div>
+                <div class="card-description">
+                    Public-facing calendar showing all available workshops with filters, search, and quick preview on hover.
+                </div>
+            </a>
+
+            <a href="workshop-detail.html" class="prototype-card">
+                <div class="card-number">2</div>
+                <div class="card-title">Workshop Details</div>
+                <div class="card-description">
+                    Comprehensive workshop information including description, topics, facilitator, and available sessions.
+                </div>
+            </a>
+
+            <a href="registration.html" class="prototype-card">
+                <div class="card-number">3</div>
+                <div class="card-title">Registration Form</div>
+                <div class="card-description">
+                    Multi-step registration capturing visitor information with newsletter opt-in and GS interest tracking.
+                </div>
+            </a>
+
+            <a href="confirmation.html" class="prototype-card">
+                <div class="card-number">4</div>
+                <div class="card-title">Confirmation Page</div>
+                <div class="card-description">
+                    Success state with email verification notice, workshop summary, and calendar integration options.
+                </div>
+            </a>
+        </div>
+
+        <div class="note">
+            <strong>📌 Design Notes:</strong>
+            This prototype demonstrates the public registration flow for unknown visitors. The design maintains consistency with the existing workshop management system while adding new capabilities for public access and self-service registration.
+        </div>
+    </div>
+</body>
+</html>

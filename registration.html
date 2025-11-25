@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for Workshop - Global Cities</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 600; color: #2563eb; }
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            flex: 1;
+        }
+        .progress-bar {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: -50%;
+            right: -50%;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+        .progress-step:first-child::before { display: none; }
+        .progress-step.active::before { background: #2563eb; }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-step.active .step-number,
+        .progress-step.completed .step-number {
+            background: #2563eb;
+            color: white;
+        }
+        .step-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .progress-step.active .step-label { color: #1f2937; }
+        .form-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .workshop-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .workshop-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+        .workshop-details {
+            font-size: 0.875rem;
+            color: #1e40af;
+        }
+        .form-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        .required { color: #dc2626; }
+        input, select {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        .checkbox-item input {
+            width: auto;
+            margin-right: 0.5rem;
+            margin-top: 2px;
+        }
+        .checkbox-item label {
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        .btn-secondary:hover { background: #f9fafb; }
+        .privacy-note {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Global Cities</div>
+        <div>Workshop Registration</div>
+    </div>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="progress-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Select Workshop</div>
+                </div>
+                <div class="progress-step active">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Your Information</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="workshop-info">
+                <div class="workshop-title">Introduction to Global Competencies</div>
+                <div class="workshop-details">📅 Tuesday, November 12, 2024 • 🕐 10:00 AM - 11:30 AM EST</div>
+            </div>
+
+            <h2 class="form-title">Your Information</h2>
+
+            <form>
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="your.email@school.edu" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name <span class="required">*</span></label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name <span class="required">*</span></label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="organization">Organization</label>
+                    <input type="text" id="organization" name="organization" placeholder="School or organization name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role">Role/Title</label>
+                        <select id="role" name="role">
+                            <option value="">Select Role</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Administrator</option>
+                            <option value="coordinator">Coordinator</option>
+                            <option value="specialist">Specialist</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">Subscribe to workshop newsletter for updates on future sessions</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gs" name="gs">
+                        <label for="gs">I'm interested in learning more about the Global Scholars program</label>
+                    </div>
+                </div>
+
+                <div class="privacy-note">
+                    Your information will be used solely for workshop administration and to send you relevant educational resources.
+                    We respect your privacy and will not share your information with third parties.
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location='confirmation.html'">Continue to Confirmation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

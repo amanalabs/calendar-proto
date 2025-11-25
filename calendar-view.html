@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Calendar - Global Cities</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 600; color: #2563eb; }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .calendar-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .month-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .nav-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        .nav-btn:hover { background: #e5e7eb; }
+        .view-toggles {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .view-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .view-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+            border: 1px solid #e5e7eb;
+        }
+        .day-header {
+            background: #f9fafb;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .day-cell {
+            background: white;
+            min-height: 100px;
+            padding: 0.5rem;
+            position: relative;
+        }
+        .day-number {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        .workshop-dot {
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+            cursor: pointer;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .workshop-dot:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+        /* Topic-based colors */
+        .workshop-dot.global-comp { background: #2563eb; } /* Blue for Global Competencies */
+        .workshop-dot.curriculum { background: #10b981; } /* Green for Curriculum Design */
+        .workshop-dot.assessment { background: #8b5cf6; } /* Purple for Assessment */
+        .workshop-dot.leadership { background: #f59e0b; } /* Amber for Thought Leadership */
+        .workshop-dot.outreach { background: #ec4899; } /* Pink for City Outreach */
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .tooltip {
+            position: absolute;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 300px;
+            display: none;
+        }
+        .tooltip.show {
+            display: block;
+        }
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .tooltip-info {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        .tooltip-seats {
+            font-weight: 500;
+            color: #059669;
+        }
+        .tooltip-seats.limited { color: #f59e0b; }
+        .tooltip-seats.full { color: #dc2626; }
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        .btn-secondary:hover { background: #f9fafb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Global Cities</div>
+        <div>Workshop Calendar</div>
+    </div>
+
+    <div class="container">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="month-nav">
+                    <button class="nav-btn">←</button>
+                    <h2>November 2024</h2>
+                    <button class="nav-btn">→</button>
+                </div>
+                <div class="view-toggles">
+                    <button class="view-btn active">Month</button>
+                    <button class="view-btn">List</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+
+                <!-- Week 1 -->
+                <div class="day-cell"><div class="day-number">27</div></div>
+                <div class="day-cell"><div class="day-number">28</div></div>
+                <div class="day-cell"><div class="day-number">29</div></div>
+                <div class="day-cell"><div class="day-number">30</div></div>
+                <div class="day-cell"><div class="day-number">31</div></div>
+                <div class="day-cell"><div class="day-number">1</div></div>
+                <div class="day-cell"><div class="day-number">2</div></div>
+
+                <!-- Week 2 -->
+                <div class="day-cell"><div class="day-number">3</div></div>
+                <div class="day-cell"><div class="day-number">4</div></div>
+                <div class="day-cell">
+                    <div class="day-number">5</div>
+                    <div class="workshop-dot global-comp" onclick="showTooltip(event, this)">GC101 - 2:00 PM</div>
+                </div>
+                <div class="day-cell"><div class="day-number">6</div></div>
+                <div class="day-cell"><div class="day-number">7</div></div>
+                <div class="day-cell"><div class="day-number">8</div></div>
+                <div class="day-cell"><div class="day-number">9</div></div>
+
+                <!-- Week 3 -->
+                <div class="day-cell"><div class="day-number">10</div></div>
+                <div class="day-cell"><div class="day-number">11</div></div>
+                <div class="day-cell">
+                    <div class="day-number">12</div>
+                    <div class="workshop-dot global-comp" onclick="showTooltip(event, this)">GC102 - 10:00 AM</div>
+                    <div class="workshop-dot curriculum" onclick="showTooltip(event, this)">GC103 - 2:00 PM</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-number">13</div>
+                    <div class="workshop-dot leadership" onclick="showTooltip(event, this)">GC201 - 3:00 PM</div>
+                </div>
+                <div class="day-cell"><div class="day-number">14</div></div>
+                <div class="day-cell">
+                    <div class="day-number">15</div>
+                    <div class="workshop-dot global-comp" onclick="showTooltip(event, this)">GC101 - 2:00 PM</div>
+                </div>
+                <div class="day-cell"><div class="day-number">16</div></div>
+
+                <!-- Week 4 -->
+                <div class="day-cell"><div class="day-number">17</div></div>
+                <div class="day-cell"><div class="day-number">18</div></div>
+                <div class="day-cell">
+                    <div class="day-number">19</div>
+                    <div class="workshop-dot assessment" onclick="showTooltip(event, this)">GC104 - 1:00 PM</div>
+                </div>
+                <div class="day-cell"><div class="day-number">20</div></div>
+                <div class="day-cell"><div class="day-number">21</div></div>
+                <div class="day-cell"><div class="day-number">22</div></div>
+                <div class="day-cell"><div class="day-number">23</div></div>
+
+                <!-- Week 5 -->
+                <div class="day-cell"><div class="day-number">24</div></div>
+                <div class="day-cell"><div class="day-number">25</div></div>
+                <div class="day-cell"><div class="day-number">26</div></div>
+                <div class="day-cell"><div class="day-number">27</div></div>
+                <div class="day-cell"><div class="day-number">28</div></div>
+                <div class="day-cell"><div class="day-number">29</div></div>
+                <div class="day-cell"><div class="day-number">30</div></div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #2563eb;"></div>
+                    <span>Global Competencies</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #10b981;"></div>
+                    <span>Curriculum Design</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #8b5cf6;"></div>
+                    <span>Assessment</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #f59e0b;"></div>
+                    <span>Thought Leadership</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ec4899;"></div>
+                    <span>City Outreach</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip (hidden by default) -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-title">Introduction to Global Competencies</div>
+        <div class="tooltip-info">📅 Tuesday, November 12, 2024</div>
+        <div class="tooltip-info">🕐 10:00 AM - 11:30 AM EST</div>
+        <div class="tooltip-info tooltip-seats">👥 12/20 seats available</div>
+        <div class="tooltip-info">🎓 Facilitator: Dr. Jane Smith</div>
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="window.location='workshop-detail.html'">View Details</button>
+            <button class="btn btn-primary" onclick="window.location='registration.html'">Quick Register</button>
+        </div>
+    </div>
+
+    <script>
+        function showTooltip(event, element) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.left = event.pageX + 10 + 'px';
+            tooltip.style.top = event.pageY + 10 + 'px';
+            tooltip.classList.add('show');
+
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
