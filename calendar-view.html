@@ -11,19 +11,10 @@
             background: #f3f4f6;
             color: #1f2937;
         }
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo { font-size: 1.5rem; font-weight: 600; color: #2563eb; }
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 1rem auto;
+            padding: 0 1rem;
         }
         .calendar-container {
             background: white;
@@ -61,7 +52,11 @@
             padding: 0.5rem 1rem;
             border-radius: 4px;
             cursor: pointer;
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.875rem;
         }
+        .view-btn:hover { background: #e5e7eb; }
         .view-btn.active {
             background: #2563eb;
             color: white;
@@ -110,11 +105,11 @@
             opacity: 0.9;
         }
         /* Topic-based colors */
-        .workshop-dot.global-comp { background: #2563eb; } /* Blue for Global Competencies */
-        .workshop-dot.curriculum { background: #10b981; } /* Green for Curriculum Design */
-        .workshop-dot.assessment { background: #8b5cf6; } /* Purple for Assessment */
-        .workshop-dot.leadership { background: #f59e0b; } /* Amber for Thought Leadership */
-        .workshop-dot.outreach { background: #ec4899; } /* Pink for City Outreach */
+        .workshop-dot.global-comp { background: #2563eb; }
+        .workshop-dot.curriculum { background: #10b981; }
+        .workshop-dot.assessment { background: #8b5cf6; }
+        .workshop-dot.leadership { background: #f59e0b; }
+        .workshop-dot.outreach { background: #ec4899; }
         .legend {
             display: flex;
             gap: 1.5rem;
@@ -162,8 +157,6 @@
             font-weight: 500;
             color: #059669;
         }
-        .tooltip-seats.limited { color: #f59e0b; }
-        .tooltip-seats.full { color: #dc2626; }
         .btn-group {
             display: flex;
             gap: 0.5rem;
@@ -191,11 +184,6 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">Global Cities</div>
-        <div>Workshop Calendar</div>
-    </div>
-
     <div class="container">
         <div class="calendar-container">
             <div class="calendar-header">
@@ -205,8 +193,8 @@
                     <button class="nav-btn">→</button>
                 </div>
                 <div class="view-toggles">
-                    <button class="view-btn active">Month</button>
-                    <button class="view-btn">List</button>
+                    <a href="calendar-view.html" class="view-btn active">Month</a>
+                    <a href="list-view.html" class="view-btn">List</a>
                 </div>
             </div>
 
@@ -314,8 +302,7 @@
         <div class="tooltip-info tooltip-seats">👥 12/20 seats available</div>
         <div class="tooltip-info">🎓 Facilitator: Dr. Jane Smith</div>
         <div class="btn-group">
-            <button class="btn btn-secondary" onclick="window.location='workshop-detail.html'">View Details</button>
-            <button class="btn btn-primary" onclick="window.location='registration.html'">Quick Register</button>
+            <button class="btn btn-primary">Register</button>
         </div>
     </div>
 

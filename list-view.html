@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Calendar - Global Cities</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .calendar-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .month-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .nav-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        .nav-btn:hover { background: #e5e7eb; }
+        .view-toggles {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .view-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        .view-btn:hover { background: #e5e7eb; }
+        .view-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .workshop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .workshop-card {
+            display: flex;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .workshop-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .workshop-date {
+            background: #f9fafb;
+            padding: 1rem;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #e5e7eb;
+        }
+        .date-month {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .date-day {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1;
+        }
+        .date-weekday {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .workshop-content {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .workshop-info {
+            flex: 1;
+        }
+        .workshop-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        .workshop-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .workshop-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .workshop-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .topic-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+        }
+        .topic-badge.global-comp { background: #2563eb; }
+        .topic-badge.curriculum { background: #10b981; }
+        .topic-badge.assessment { background: #8b5cf6; }
+        .topic-badge.leadership { background: #f59e0b; }
+        .topic-badge.outreach { background: #ec4899; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .seats-info {
+            font-size: 0.75rem;
+            color: #059669;
+            font-weight: 500;
+        }
+        .seats-info.limited { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="month-nav">
+                    <button class="nav-btn">←</button>
+                    <h2>November 2024</h2>
+                    <button class="nav-btn">→</button>
+                </div>
+                <div class="view-toggles">
+                    <a href="calendar-view.html" class="view-btn">Month</a>
+                    <a href="list-view.html" class="view-btn active">List</a>
+                </div>
+            </div>
+
+            <div class="workshop-list">
+                <!-- Workshop 1 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">5</div>
+                        <div class="date-weekday">Tuesday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Introduction to Global Competencies</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 2:00 PM - 3:30 PM EST</div>
+                                <div class="workshop-meta-item">🎓 Dr. Jane Smith</div>
+                                <div class="workshop-meta-item seats-info">👥 15/20 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge global-comp">Global Competencies</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshop 2 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">12</div>
+                        <div class="date-weekday">Tuesday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Global Competencies: Deep Dive</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 10:00 AM - 11:30 AM EST</div>
+                                <div class="workshop-meta-item">🎓 Dr. Jane Smith</div>
+                                <div class="workshop-meta-item seats-info">👥 12/20 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge global-comp">Global Competencies</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshop 3 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">12</div>
+                        <div class="date-weekday">Tuesday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Curriculum Design for Global Education</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 2:00 PM - 3:30 PM EST</div>
+                                <div class="workshop-meta-item">🎓 Michael Chen</div>
+                                <div class="workshop-meta-item seats-info limited">👥 18/20 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge curriculum">Curriculum Design</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshop 4 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">13</div>
+                        <div class="date-weekday">Wednesday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Leading Global Education Initiatives</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 3:00 PM - 4:30 PM EST</div>
+                                <div class="workshop-meta-item">🎓 Sarah Johnson</div>
+                                <div class="workshop-meta-item seats-info">👥 8/15 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge leadership">Thought Leadership</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshop 5 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">15</div>
+                        <div class="date-weekday">Friday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Introduction to Global Competencies</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 2:00 PM - 3:30 PM EST</div>
+                                <div class="workshop-meta-item">🎓 Dr. Jane Smith</div>
+                                <div class="workshop-meta-item seats-info">👥 10/20 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge global-comp">Global Competencies</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshop 6 -->
+                <div class="workshop-card">
+                    <div class="workshop-date">
+                        <div class="date-month">Nov</div>
+                        <div class="date-day">19</div>
+                        <div class="date-weekday">Tuesday</div>
+                    </div>
+                    <div class="workshop-content">
+                        <div class="workshop-info">
+                            <div class="workshop-title">Assessment Strategies for Global Learning</div>
+                            <div class="workshop-meta">
+                                <div class="workshop-meta-item">🕐 1:00 PM - 2:30 PM EST</div>
+                                <div class="workshop-meta-item">🎓 Dr. Emily Rodriguez</div>
+                                <div class="workshop-meta-item seats-info">👥 14/20 seats</div>
+                            </div>
+                        </div>
+                        <div class="workshop-actions">
+                            <span class="topic-badge assessment">Assessment</span>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #2563eb;"></div>
+                    <span>Global Competencies</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #10b981;"></div>
+                    <span>Curriculum Design</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #8b5cf6;"></div>
+                    <span>Assessment</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #f59e0b;"></div>
+                    <span>Thought Leadership</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ec4899;"></div>
+                    <span>City Outreach</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
